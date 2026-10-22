@@ -6,7 +6,7 @@ export async function getFounderProjects(fetcher: typeof fetch = fetch): Promise
   return Promise.all(founderProjects.map(async curated => {
     try {
       const response = await fetcher(`https://api.github.com/repos/${owner}/${encodeURIComponent(curated.repo)}`, {
-        headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'neon-studios-site' },
+        headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'neon-studios-site', ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}) },
         next: { revalidate: 3600 },
       });
       if (!response.ok) return { curated, repo: null };

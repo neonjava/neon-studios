@@ -11,7 +11,7 @@ export function Navigation() {
   const [open, setOpen] = useState(false);
   return <>
     <header className="site-header"><div className="header-inner container">
-      <Link className="brand" href="/" aria-label="Neon Studios home" onClick={() => setOpen(false)}><span className="brand-mark">N<span>.</span></span><span>neon<span className="brand-light">studios</span></span></Link>
+      <Link className="brand" href="/" onClick={() => setOpen(false)}><span className="brand-mark">N.</span><span>neon<span className="brand-light">studios</span></span></Link>
       <nav className="desktop-nav" aria-label="Primary navigation">{navigation.map(item => <Link key={item.href} href={item.href} className={pathname === item.href ? 'nav-link active' : 'nav-link'} aria-current={pathname === item.href ? 'page' : undefined}>{item.label}</Link>)}</nav>
       <div className="header-actions"><ThemeToggle /><Link className="button button-small button-primary desktop-cta" href="/contact">Start a project <ArrowUpRight size={16}/></Link><button className="icon-button mobile-menu-button" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? 'Close menu' : 'Open menu'}>{open ? <X size={20}/> : <Menu size={20}/>}</button></div>
     </div></header>

@@ -4,9 +4,9 @@ import { Moon, Sun, Monitor } from 'lucide-react';
 type Theme = 'light' | 'dark' | 'system';
 export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>('system');
-  useEffect(() => { setTheme((localStorage.getItem('neon-theme') as Theme) || 'system'); }, []);
+  useEffect(() => { const frame = requestAnimationFrame(() => setTheme((localStorage.getItem('neon-theme') as Theme) || 'system')); const media = matchMedia('(prefers-color-scheme: dark)'); const syncSystem = () => { if ((localStorage.getItem('neon-theme') || 'system') === 'system') document.documentElement.dataset.theme = media.matches ? 'dark' : 'light'; }; media.addEventListener('change', syncSystem); return () => { cancelAnimationFrame(frame); media.removeEventListener('change', syncSystem); }; }, []);
   function cycle() {
-    const next: Theme = theme === 'system' ? 'light' : theme === 'light' ? 'dark' : 'system';
+    const next: Theme = theme === 'system' ? (document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark') : theme === 'dark' ? 'light' : 'system';
     localStorage.setItem('neon-theme', next);
     setTheme(next);
     const dark = next === 'dark' || (next === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
