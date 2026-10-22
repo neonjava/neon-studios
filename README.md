@@ -23,7 +23,7 @@ Open http://localhost:3000. The site uses `neonjava.in@gmail.com` as the default
 - `src/app`: App Router pages, metadata endpoints, loading/error states.
 - `src/styles`: separate tokens, base, layout, sections, workspace, forms, and responsive styles, composed by `globals.css`.
 
-The visual system defaults to matte black with restrained macOS-inspired workspace chrome. The appearance menu offers Light and System modes and persists the selection. Code highlighting follows the active theme. Shared `Brand`, `PageIntro`, `WindowFrame`, and `CallToAction` components keep routes consistent.
+The visual system defaults to matte black with restrained macOS-inspired workspace chrome. The appearance button switches directly between dark and light and persists the selection. Dark is the default, including for previously saved System preferences. Code highlighting follows the active theme. Shared `Brand`, `PageIntro`, `WindowFrame`, and `CallToAction` components keep routes consistent.
 
 The Migration Lab contains static, explicitly educational examples. It does not execute visitor code or convert arbitrary source. No benchmarks or client case studies are published without evidence. The work page fetches live public repository metadata on the server and revalidates it hourly. If GitHub fails, the curated project remains visible without fabricated metadata.
 
@@ -54,4 +54,25 @@ This repository does not deploy or change DNS automatically.
 
 ## Refactor verification
 
-The matte redesign was checked with ESLint, strict TypeScript, the production build, seven unit/integration tests, and four Chromium browser flows. Browser coverage includes persistent light/dark/system preferences, navigation, mobile dock behavior, form validation, code copying, migration selection, workspace interactions, keyboard process tabs, and axe scans on all six routes in both themes. Migration fixtures are compiled/executed using Python, Node.js, Java, and Rust; these toolchains must be installed to run the full unit suite.
+The matte redesign was checked with ESLint, strict TypeScript, the production build, seven unit/integration tests, and four Chromium browser flows. Browser coverage includes persistent light/dark preferences, navigation, mobile dock behavior, form validation, code copying, migration selection, workspace interactions, keyboard process tabs, and axe scans on all six routes in both themes. Migration fixtures are compiled/executed using Python, Node.js, Java, and Rust; these toolchains must be installed to run the full unit suite.
+
+## Cloudflare DNS for studio.neonjava.in
+
+1. In Vercel, import `neonjava/neon-studios`. Use the Next.js preset, repository root, `npm run build`, and default output settings. Set the public enquiry recipient if needed, then deploy and check the generated preview URL.
+2. In the Vercel project, open **Settings → Domains** and add `studio.neonjava.in` to production. Copy the exact CNAME target Vercel displays; it can be specific to the project.
+3. In Cloudflare, select the existing `neonjava.in` zone, then **DNS → Records → Add record**:
+
+   | Field | Value |
+   | --- | --- |
+   | Type | CNAME |
+   | Name | studio |
+   | Target | Exact CNAME target from Vercel |
+   | Proxy status | DNS only (gray cloud) |
+   | TTL | Auto |
+
+4. If Vercel requests ownership verification, add the exact TXT name and value it provides in Cloudflare too.
+5. Wait for Vercel to show valid configuration and provision HTTPS, then open `https://studio.neonjava.in` and check the routes and enquiry draft.
+
+Keep existing apex, www, email records, and Cloudflare nameservers. If a `studio` record already exists, inspect its destination before replacing it. This website promotes paid services: use a Vercel plan that permits commercial use; Hobby is restricted to personal, non-commercial usage.
+
+References: [Vercel custom domains](https://vercel.com/docs/domains/set-up-custom-domain), [Cloudflare DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/), [Vercel usage guidelines](https://vercel.com/docs/limits/fair-use-guidelines).

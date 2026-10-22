@@ -42,8 +42,8 @@ textarea {
   touch-action: manipulation;
 }
 ::selection {
-  background: var(--accent);
-  color: var(--bg);
+  background: var(--selection-bg);
+  color: var(--selection-text);
 }
 :focus-visible {
   outline: 2px solid var(--accent);

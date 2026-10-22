@@ -1,45 +1,33 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Check, Monitor, Moon, Sun } from "lucide-react";
+import { useSyncExternalStore } from "react";
+import { Moon, Sun } from "lucide-react";
 
-type Theme = "light" | "dark" | "system";
-const options = [
-  { value: "dark", label: "Matte black", Icon: Moon },
-  { value: "light", label: "Light", Icon: Sun },
-  { value: "system", label: "System", Icon: Monitor },
-] as const;
-
+type Theme = "light" | "dark";
 function getTheme(): Theme {
   try {
     const value = localStorage.getItem("neon-theme");
-    return value === "light" || value === "system" ? value : "dark";
+    return value === "light" ? "light" : "dark";
   } catch {
     const value = document.documentElement.dataset.preference;
-    return value === "light" || value === "system" ? value : "dark";
+    return value === "light" ? "light" : "dark";
   }
 }
 
 function applyTheme(theme: Theme) {
-  const dark =
-    theme === "dark" ||
-    (theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
-  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.documentElement.dataset.theme = theme;
 }
 
 function subscribe(callback: () => void) {
-  const media = matchMedia("(prefers-color-scheme: dark)");
   const sync = () => {
     applyTheme(getTheme());
     callback();
   };
   window.addEventListener("storage", sync);
   window.addEventListener("neon-theme-change", sync);
-  media.addEventListener("change", sync);
   return () => {
     window.removeEventListener("storage", sync);
     window.removeEventListener("neon-theme-change", sync);
-    media.removeEventListener("change", sync);
   };
 }
 
@@ -49,30 +37,6 @@ export function ThemeToggle() {
     getTheme,
     () => "dark" as Theme,
   );
-  const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
-  const trigger = useRef<HTMLButtonElement>(null);
-  const Icon = theme === "dark" ? Moon : theme === "light" ? Sun : Monitor;
-
-  useEffect(() => {
-    if (!open) return;
-    const dismiss = (event: PointerEvent) => {
-      if (!root.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const escape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-        trigger.current?.focus();
-      }
-    };
-    document.addEventListener("pointerdown", dismiss);
-    document.addEventListener("keydown", escape);
-    return () => {
-      document.removeEventListener("pointerdown", dismiss);
-      document.removeEventListener("keydown", escape);
-    };
-  }, [open]);
-
   function select(value: Theme) {
     document.documentElement.setAttribute("data-preference", value);
     try {
@@ -82,42 +46,19 @@ export function ThemeToggle() {
     }
     applyTheme(value);
     window.dispatchEvent(new Event("neon-theme-change"));
-    setOpen(false);
-    trigger.current?.focus();
   }
 
+  const nextTheme = theme === "dark" ? "light" : "dark";
+  const Icon = theme === "dark" ? Sun : Moon;
   return (
-    <div className="theme-control" ref={root}>
-      <button
-        ref={trigger}
-        className="icon-button"
-        onClick={() => setOpen(!open)}
-        aria-label={`Theme: ${theme}. Choose appearance`}
-        aria-expanded={open}
-        aria-controls="appearance-panel"
-      >
-        <Icon size={16} aria-hidden="true" />
-      </button>
-      {open && (
-        <div
-          className="appearance-panel"
-          id="appearance-panel"
-          aria-label="Appearance"
-        >
-          <span className="menu-caption">Appearance</span>
-          {options.map(({ value, label, Icon: OptionIcon }) => (
-            <button
-              key={value}
-              onClick={() => select(value)}
-              aria-pressed={theme === value}
-            >
-              <OptionIcon size={15} />
-              <span>{label}</span>
-              {theme === value && <Check size={14} />}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+    <button
+      type="button"
+      className="icon-button"
+      onClick={() => select(nextTheme)}
+      aria-label={`Switch to ${nextTheme} mode`}
+      title={`Switch to ${nextTheme} mode`}
+    >
+      <Icon size={16} aria-hidden="true" />
+    </button>
   );
 }

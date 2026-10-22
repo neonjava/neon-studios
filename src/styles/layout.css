@@ -60,47 +60,6 @@
   gap: 14px;
   align-items: center;
 }
-.theme-control {
-  position: relative;
-}
-.appearance-panel {
-  position: absolute;
-  right: 0;
-  top: 43px;
-  width: 180px;
-  padding: 6px;
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
-  border-radius: 9px;
-  box-shadow: var(--shadow);
-  z-index: 60;
-}
-.menu-caption {
-  display: block;
-  padding: 8px 9px;
-  font-size: 9px;
-}
-.appearance-panel button {
-  width: 100%;
-  border: 0;
-  border-radius: 5px;
-  background: transparent;
-  display: flex;
-  gap: 9px;
-  align-items: center;
-  padding: 10px 9px;
-  color: var(--muted);
-  font-size: 12px;
-  text-align: left;
-}
-.appearance-panel button span {
-  flex: 1;
-}
-.appearance-panel button:hover,
-.appearance-panel button[aria-pressed="true"] {
-  background: var(--surface-3);
-  color: var(--text);
-}
 .mobile-menu-button,
 .mobile-menu,
 .mobile-dock {

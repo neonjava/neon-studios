@@ -14,21 +14,19 @@ test("routes, theme preference, and migration lab", async ({
     .first()
     .click();
   await expect(page).toHaveURL(/\/services$/);
-  await page.locator('.site-header [aria-label^="Theme:"]').click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await page.getByRole("button", { name: "Light", exact: true }).click();
+  await page.getByRole("button", { name: "Switch to light mode" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-  await page.locator('.site-header [aria-label^="Theme:"]').click();
-  await page.getByRole("button", { name: "Matte black", exact: true }).click();
+  await page.getByRole("button", { name: "Switch to dark mode" }).click();
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await page.locator('.site-header [aria-label^="Theme:"]').click();
-  await page.getByRole("button", { name: "System", exact: true }).click();
   await page.emulateMedia({ colorScheme: "light" });
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-  await page.emulateMedia({ colorScheme: "dark" });
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  // Old system preferences migrate to the new dark default.
+  await page.evaluate(() => localStorage.setItem("neon-theme", "system"));
+  await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.goto("/lab");
   await page.getByLabel("Source language").selectOption("Java");

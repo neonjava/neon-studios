@@ -36,7 +36,7 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#101010" },
   ],
 };
-const themeScript = `(()=>{try{const t=localStorage.getItem('neon-theme')||'dark';document.documentElement.dataset.theme=t==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t==='light'?'light':'dark'}catch{document.documentElement.dataset.theme='dark'}})()`;
+const themeScript = `(()=>{try{const t=localStorage.getItem('neon-theme')||'dark';document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch{document.documentElement.dataset.theme='dark'}})()`;
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
