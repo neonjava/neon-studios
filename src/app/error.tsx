@@ -1,0 +1,2 @@
+'use client';
+export default function ErrorPage({reset}: {error: Error; reset: () => void}) { return <div className="container not-found"><span className="eyebrow"><span className="eyebrow-dot"/> Something went wrong</span><h1>Let’s try again.</h1><p>This page could not load. You can retry without losing your place.</p><button className="button button-primary" onClick={reset}>Retry</button></div>; }
