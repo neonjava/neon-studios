@@ -1,6 +1,130 @@
-'use client';
-import { useState } from 'react';
-import { motion } from 'motion/react';
-import { Code2, SearchCheck, Braces, BadgeCheck } from 'lucide-react';
-const stages = [{ label: 'Existing application', detail: 'Understand the system as it runs today', Icon: Code2 }, { label: 'Migration analysis', detail: 'Map behavior, dependencies, and risk', Icon: SearchCheck }, { label: 'Rust implementation', detail: 'Build around clear contracts', Icon: Braces }, { label: 'Compatibility verification', detail: 'Compare outcomes and document gaps', Icon: BadgeCheck }];
-export function Pipeline() { const [active, setActive] = useState(0); return <div className="pipeline" aria-label="Migration approach"><div className="pipeline-top"><span className="pipeline-label">THE MIGRATION PATH</span><span className="pipeline-status">{String(active+1).padStart(2,'0')} / 04</span></div><div className="pipeline-track">{stages.map(({label, Icon}, i) => <button key={label} className={`pipeline-stage ${active === i ? 'active' : ''}`} onClick={() => setActive(i)} aria-pressed={active === i}><span className="pipeline-icon"><Icon size={22}/></span><span>{label}</span>{i < stages.length-1 && <span className="pipeline-connector" aria-hidden="true"/>}</button>)}</div><motion.p key={active} initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} className="pipeline-detail">{stages[active].detail}</motion.p></div>; }
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import {
+  ArrowUpRight,
+  FileCode2,
+  ScanSearch,
+  Braces,
+  ListChecks,
+  ChevronRight,
+} from "lucide-react";
+import { WindowFrame } from "./ui/WindowFrame";
+import { workspaceStages } from "@/content/studio";
+import type { HighlightedExample } from "@/lib/highlight";
+
+const icons = [FileCode2, ScanSearch, Braces, ListChecks];
+
+export function Pipeline({ example }: { example: HighlightedExample }) {
+  const [active, setActive] = useState(2);
+  const [view, setView] = useState<"source" | "rust">("rust");
+  const stage = workspaceStages[active];
+
+  function chooseStage(index: number) {
+    setActive(index);
+    if (index === 0) setView("source");
+    if (index === 2) setView("rust");
+  }
+
+  return (
+    <WindowFrame
+      title="Migration workspace"
+      label="Educational example"
+      className="hero-workspace"
+    >
+      <div className="workspace-body">
+        <div className="workspace-sidebar">
+          <span className="sidebar-caption">The migration path</span>
+          {workspaceStages.map((item, index) => {
+            const Icon = icons[index];
+            return (
+              <button
+                key={item.title}
+                onClick={() => chooseStage(index)}
+                className={`workspace-stage ${active === index ? "active" : ""}`}
+                aria-pressed={active === index}
+              >
+                <Icon size={16} />
+                <span>{item.title}</span>
+                <span className="stage-number">0{index + 1}</span>
+              </button>
+            );
+          })}
+          <div className="workspace-project">
+            <span className="sidebar-caption">Example project</span>
+            <span>
+              <FileCode2 size={14} /> name-normalizer
+            </span>
+            <small>Python → Rust</small>
+          </div>
+        </div>
+        <div className="workspace-editor">
+          <div className="editor-tabs" aria-label="Example implementation">
+            <button
+              aria-pressed={view === "source"}
+              className={view === "source" ? "active" : ""}
+              onClick={() => setView("source")}
+            >
+              <FileCode2 size={13} />
+              main.py
+            </button>
+            <button
+              aria-pressed={view === "rust"}
+              className={view === "rust" ? "active" : ""}
+              onClick={() => setView("rust")}
+            >
+              <Braces size={13} />
+              main.rs
+            </button>
+          </div>
+          <div
+            className="workspace-code syntax-code"
+            tabIndex={0}
+            role="region"
+            aria-label="Example code"
+            dangerouslySetInnerHTML={{
+              __html: view === "rust" ? example.rustHtml : example.sourceHtml,
+            }}
+          />
+          <div className="editor-status">
+            <span>
+              {view === "rust"
+                ? "Rust · Standard library"
+                : "Python · Standard library"}
+            </span>
+            <span>UTF-8</span>
+          </div>
+        </div>
+        <aside className="workspace-inspector" aria-live="polite">
+          <span className="sidebar-caption">
+            0{active + 1} / {stage.artifact}
+          </span>
+          <h3>{stage.subtitle}</h3>
+          <p>{stage.description}</p>
+          {active === 3 ? (
+            <div className="fixture-preview">
+              <span>INPUT</span>
+              <pre>{example.tests[0].input}</pre>
+              <span>EXPECTED OUTPUT</span>
+              <pre>{example.tests[0].expected}</pre>
+            </div>
+          ) : (
+            <div className="contract-note">
+              <span className="sidebar-caption">Compatibility boundary</span>
+              <p>{example.limitations}</p>
+            </div>
+          )}
+        </aside>
+      </div>
+      <div className="workspace-bottom">
+        <span>
+          <ChevronRight size={13} /> Small example. Explicit behavior.
+        </span>
+        <Link href="/lab">
+          Explore the Migration Lab <ArrowUpRight size={14} />
+        </Link>
+      </div>
+    </WindowFrame>
+  );
+}

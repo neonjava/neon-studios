@@ -1,6 +1,52 @@
-import type { Metadata } from 'next';
-import { ProjectGrid } from '@/components/ProjectGrid';
-import { SectionIntro } from '@/components/SectionIntro';
-import { caseStudies } from '@/content/projects';
-export const metadata: Metadata = { title: 'Engineering Work', description: 'Verified founder projects and migration case studies from Neon Studios.' };
-export default function WorkPage() { return <><div className="container page-intro"><span className="eyebrow"><span className="eyebrow-dot"/> Work</span><h1>Engineering evidence, with the context attached.</h1><p>Public repositories show how NeonJava approaches systems, tooling, and Rust. Client migration work will appear here only when it can be documented accurately.</p></div><section className="section" style={{paddingTop:15}}><div className="container"><SectionIntro eyebrow="Founder engineering projects" title="Open source work.">Repository metadata comes from GitHub. Descriptions below distinguish implemented behavior from planned work.</SectionIntro><ProjectGrid/></div></section><section className="section section-soft"><div className="container"><SectionIntro eyebrow="Verified migration case studies" title="Proof belongs next to the claim.">Future case studies will record scope, compatibility tests, limitations, and benchmark methodology.</SectionIntro>{caseStudies.length === 0 ? <div className="empty-state"><h3>No published migration case studies yet.</h3><p>Neon Studios is new. We will publish case studies when completed work can be shared and verified.</p></div> : null}</div></section></>; }
+import type { Metadata } from "next";
+import { ProjectGrid } from "@/components/ProjectGrid";
+import { SectionIntro } from "@/components/SectionIntro";
+import { PageIntro } from "@/components/PageIntro";
+import { CallToAction } from "@/components/CallToAction";
+import { caseStudies } from "@/content/projects";
+
+export const metadata: Metadata = {
+  title: "Engineering Work",
+  description:
+    "Verified founder projects and migration case studies from Neon Studios.",
+};
+
+export default function WorkPage() {
+  return (
+    <>
+      <PageIntro label="Engineering work" title="Evidence in the open.">
+        Source code, documented decisions, and honest limits. These founder
+        projects show the engineering behind the studio.
+      </PageIntro>
+      <section className="container page-content">
+        <SectionIntro
+          eyebrow="01 / Founder projects"
+          title="Systems and tools, built in Rust."
+        >
+          Open-source work by NeonJava, with repository metadata from GitHub.
+          These are independent projects, not studio client engagements.
+        </SectionIntro>
+        <ProjectGrid />
+      </section>
+      <section className="section container">
+        <SectionIntro
+          eyebrow="02 / Migration case studies"
+          title="The record grows with the work."
+        >
+          Published migrations will include their scope, verification,
+          methodology, and limitations.
+        </SectionIntro>
+        {caseStudies.length === 0 && (
+          <div className="empty-state">
+            <h3>No published migration case studies yet.</h3>
+            <p>
+              Neon Studios is new. Completed work will appear here when it can
+              be shared and verified.
+            </p>
+          </div>
+        )}
+      </section>
+      <CallToAction />
+    </>
+  );
+}

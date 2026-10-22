@@ -1,1 +1,10 @@
-export default function Loading() { return <div className="container page-intro" role="status" aria-live="polite"><span className="eyebrow"><span className="eyebrow-dot"/> Neon Studios</span><h1>Loading page…</h1></div>; }
+export default function Loading() {
+  return (
+    <div className="container page-intro" role="status" aria-live="polite">
+      <span className="eyebrow">
+        <span className="eyebrow-dot" /> Neon Studios
+      </span>
+      <h1>Loading page…</h1>
+    </div>
+  );
+}

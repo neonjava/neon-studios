@@ -11,9 +11,93 @@ export interface Service {
   verification: string;
 }
 export const services: Service[] = [
-  { slug: 'python', source: 'Python', title: 'Python to Rust', eyebrow: 'Dynamic to native', summary: 'Move selected Python tools and services into a compiled Rust implementation with explicit behavior contracts.', workloads: ['Data pipelines', 'CLI tools', 'Background workers'], helps: 'Native binaries can simplify deployment and reduce interpreter overhead in suitable workloads.', challenges: 'Dynamic typing, third-party package behavior, serialization, and exception semantics need deliberate translation.', approach: 'Inventory dependencies and observed behavior, isolate a bounded component, then migrate it behind stable inputs and outputs.', verification: 'Golden fixtures, property tests where useful, and side-by-side output comparisons against the Python implementation.' },
-  { slug: 'node', source: 'Node.js', title: 'Node.js to Rust', eyebrow: 'Event loop to explicit concurrency', summary: 'Rebuild backend services, workers, and developer tools while preserving their external contracts.', workloads: ['HTTP APIs', 'Queue workers', 'CLI tools'], helps: 'Rust offers predictable resource ownership and a compact native runtime for services with clear boundaries.', challenges: 'Async behavior, npm package semantics, date handling, and JavaScript coercion require compatibility tests.', approach: 'Map routes and event flows, freeze API fixtures, then replace one service boundary at a time.', verification: 'Contract tests for routes and payloads, failure-path tests, and load measurements only when baselines exist.' },
-  { slug: 'java', source: 'Java', title: 'Java to Rust', eyebrow: 'JVM to native', summary: 'Migrate targeted Java applications, services, and libraries when native deployment or system-level control matters.', workloads: ['Backend services', 'Libraries', 'Protocol tooling'], helps: 'Rust can reduce runtime dependencies and give closer control of memory and concurrency.', challenges: 'Reflection, framework conventions, GC-dependent assumptions, and JVM ecosystem integrations may shape scope.', approach: 'Identify domain boundaries and framework behavior, document compatibility, then incrementally port testable modules.', verification: 'Cross-language fixtures, protocol conformance, and operational checks for startup, shutdown, and observability.' },
-  { slug: 'cpp', source: 'C / C++', title: 'C/C++ to Rust', eyebrow: 'Systems modernization', summary: 'Modernize selected native components with explicit safety boundaries and careful interoperability.', workloads: ['Native libraries', 'CLI tools', 'Performance-sensitive components'], helps: 'Ownership and type checking can prevent classes of memory safety defects in rewritten code.', challenges: 'ABI stability, undefined behavior, build systems, and platform-specific behavior require careful investigation.', approach: 'Start with a seam that can be tested independently; use FFI where a staged replacement is safer.', verification: 'Cross-language tests, sanitizers on the original code where useful, fuzzing of parsers, and platform builds.' },
-  { slug: 'sdk', source: 'New SDK', title: 'Rust SDK development', eyebrow: 'Interfaces built to last', summary: 'Design and build Rust libraries and SDKs around documented contracts and real integration needs.', workloads: ['API clients', 'Reusable crates', 'FFI layers'], helps: 'Strong types and explicit error handling support maintainable library interfaces.', challenges: 'API stability, versioning, error design, documentation, and compatibility with caller environments.', approach: 'Define the public contract and use cases first, then implement a minimal ergonomic API with examples.', verification: 'Unit and integration tests, documentation examples, compatibility checks, and release review.' },
+  {
+    slug: "python",
+    source: "Python",
+    title: "Python to Rust",
+    eyebrow: "Dynamic to native",
+    summary:
+      "Move selected Python tools and services into a compiled Rust implementation with explicit behavior contracts.",
+    workloads: ["Data pipelines", "CLI tools", "Background workers"],
+    helps:
+      "Native binaries can simplify deployment and reduce interpreter overhead in suitable workloads.",
+    challenges:
+      "Dynamic typing, third-party package behavior, serialization, and exception semantics need deliberate translation.",
+    approach:
+      "Inventory dependencies and observed behavior, isolate a bounded component, then migrate it behind stable inputs and outputs.",
+    verification:
+      "Golden fixtures, property tests where useful, and side-by-side output comparisons against the Python implementation.",
+  },
+  {
+    slug: "node",
+    source: "Node.js",
+    title: "Node.js to Rust",
+    eyebrow: "Event loop to explicit concurrency",
+    summary:
+      "Rebuild backend services, workers, and developer tools while preserving their external contracts.",
+    workloads: ["HTTP APIs", "Queue workers", "CLI tools"],
+    helps:
+      "Rust offers predictable resource ownership and a compact native runtime for services with clear boundaries.",
+    challenges:
+      "Async behavior, npm package semantics, date handling, and JavaScript coercion require compatibility tests.",
+    approach:
+      "Map routes and event flows, freeze API fixtures, then replace one service boundary at a time.",
+    verification:
+      "Contract tests for routes and payloads, failure-path tests, and load measurements only when baselines exist.",
+  },
+  {
+    slug: "java",
+    source: "Java",
+    title: "Java to Rust",
+    eyebrow: "JVM to native",
+    summary:
+      "Migrate targeted Java applications, services, and libraries when native deployment or system-level control matters.",
+    workloads: ["Backend services", "Libraries", "Protocol tooling"],
+    helps:
+      "Rust can reduce runtime dependencies and give closer control of memory and concurrency.",
+    challenges:
+      "Reflection, framework conventions, GC-dependent assumptions, and JVM ecosystem integrations may shape scope.",
+    approach:
+      "Identify domain boundaries and framework behavior, document compatibility, then incrementally port testable modules.",
+    verification:
+      "Cross-language fixtures, protocol conformance, and operational checks for startup, shutdown, and observability.",
+  },
+  {
+    slug: "cpp",
+    source: "C / C++",
+    title: "C/C++ to Rust",
+    eyebrow: "Systems modernization",
+    summary:
+      "Modernize selected native components with explicit safety boundaries and careful interoperability.",
+    workloads: [
+      "Native libraries",
+      "CLI tools",
+      "Performance-sensitive components",
+    ],
+    helps:
+      "Ownership and type checking can prevent classes of memory safety defects in rewritten code.",
+    challenges:
+      "ABI stability, undefined behavior, build systems, and platform-specific behavior require careful investigation.",
+    approach:
+      "Start with a seam that can be tested independently; use FFI where a staged replacement is safer.",
+    verification:
+      "Cross-language tests, sanitizers on the original code where useful, fuzzing of parsers, and platform builds.",
+  },
+  {
+    slug: "sdk",
+    source: "New SDK",
+    title: "Rust SDK development",
+    eyebrow: "Interfaces built to last",
+    summary:
+      "Design and build Rust libraries and SDKs around documented contracts and real integration needs.",
+    workloads: ["API clients", "Reusable crates", "FFI layers"],
+    helps:
+      "Strong types and explicit error handling support maintainable library interfaces.",
+    challenges:
+      "API stability, versioning, error design, documentation, and compatibility with caller environments.",
+    approach:
+      "Define the public contract and use cases first, then implement a minimal ergonomic API with examples.",
+    verification:
+      "Unit and integration tests, documentation examples, compatibility checks, and release review.",
+  },
 ];

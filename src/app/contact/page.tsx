@@ -1,5 +1,47 @@
-import type { Metadata } from 'next';
-import { ContactForm } from '@/components/ContactForm';
-import { site } from '@/config/site';
-export const metadata: Metadata = { title: 'Start a Project', description: 'Discuss an existing codebase or Rust migration with Neon Studios.' };
-export default function ContactPage() { return <><div className="container page-intro"><span className="eyebrow"><span className="eyebrow-dot"/> Start a project</span><h1>Tell us what your software needs to become.</h1><p>Share the system you have today, the constraints that matter, and the reason you are exploring Rust. A useful first conversation begins with context.</p></div><section className="section" style={{paddingTop:12}}><div className="container form-shell"><aside className="contact-aside"><h2>A practical first step.</h2><p>This form prepares an email draft. Your email application must send it; the website cannot confirm delivery.</p><p>Prefer writing directly?</p><a href={`mailto:${site.email}`}>{site.email}</a><hr style={{border:0,borderTop:'1px solid var(--border)',margin:'25px 0'}}/><p>Helpful details include the current language, dependencies, test coverage, deployment environment, and the behavior that cannot change.</p></aside><ContactForm recipient={site.email}/></div></section></>; }
+import type { Metadata } from "next";
+import { ContactForm } from "@/components/ContactForm";
+import { PageIntro } from "@/components/PageIntro";
+import { WindowFrame } from "@/components/ui/WindowFrame";
+import { site } from "@/config/site";
+
+export const metadata: Metadata = {
+  title: "Start a Project",
+  description:
+    "Discuss an existing codebase or Rust migration with Neon Studios.",
+};
+
+export default function ContactPage() {
+  return (
+    <>
+      <PageIntro
+        label="Start a conversation"
+        title="Let’s understand what comes next."
+      >
+        Tell us about the software you have, the constraints that matter, and
+        why you’re considering Rust. That’s enough for a useful first
+        conversation.
+      </PageIntro>
+      <section className="container form-shell page-content">
+        <aside className="contact-aside">
+          <span className="eyebrow">Direct to the founder</span>
+          <h2>Start with context.</h2>
+          <p>
+            The current language, dependencies, deployment environment, and
+            behavior that cannot change are all useful starting points.
+          </p>
+          <hr className="aside-divider" />
+          <p>Prefer your own email?</p>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          <hr className="aside-divider" />
+          <p>
+            This form prepares an email draft. Review and send it in your email
+            application to complete the enquiry.
+          </p>
+        </aside>
+        <WindowFrame title="Project enquiry" label="Email draft">
+          <ContactForm recipient={site.email} />
+        </WindowFrame>
+      </section>
+    </>
+  );
+}

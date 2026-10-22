@@ -1,17 +1,211 @@
-'use client';
-import { useState } from 'react';
-import { ArrowUpRight, Check, Copy } from 'lucide-react';
-import { emptyEnquiry, formatEnquiry, validateEnquiry, limits, type Enquiry, type EnquiryField } from '@/lib/validation';
+"use client";
+import { useState } from "react";
+import { ArrowUpRight, Check, Copy } from "lucide-react";
+import {
+  emptyEnquiry,
+  formatEnquiry,
+  validateEnquiry,
+  limits,
+  type Enquiry,
+  type EnquiryField,
+} from "@/lib/validation";
 export function ContactForm({ recipient }: { recipient: string }) {
   const [values, setValues] = useState<Enquiry>(emptyEnquiry);
-  const [errors, setErrors] = useState<Partial<Record<EnquiryField,string>>>({});
-  const [feedback, setFeedback] = useState('');
+  const [errors, setErrors] = useState<Partial<Record<EnquiryField, string>>>(
+    {},
+  );
+  const [feedback, setFeedback] = useState("");
   const [copied, setCopied] = useState(false);
-  function update(field: EnquiryField, value: string) { setValues(current => ({...current,[field]:value})); setErrors(current => ({...current,[field]:undefined})); setFeedback(''); }
-  function check() { const next = validateEnquiry(values); setErrors(next); if (Object.keys(next).length) { setFeedback('Please correct the highlighted fields.'); return false; } return true; }
-  function openEmail() { if (!check()) return; const subject = encodeURIComponent(`Migration enquiry from ${values.name.trim()}`); const body = encodeURIComponent(formatEnquiry(values)); window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`; setFeedback('Your email application should open with a draft. Review and send it there to complete the enquiry.'); }
-  async function copy() { if (!check()) return; try { await navigator.clipboard.writeText(formatEnquiry(values)); setCopied(true); setFeedback('Enquiry copied. Paste it into an email and send it to ' + recipient + '.'); } catch { setFeedback('Copy was unavailable in this browser. You can use the email draft instead.'); } }
-  const input = (field: EnquiryField, label: string, required = false, type = 'text') => <div className={field === 'repository' ? 'field full' : 'field'}><label htmlFor={field}>{label}{required ? ' *' : ''}</label><input id={field} type={type} value={values[field]} onChange={e => update(field,e.target.value)} maxLength={limits[field]} aria-invalid={!!errors[field]} aria-describedby={errors[field] ? `${field}-error` : undefined} required={required}/>{errors[field] && <span className="field-error" id={`${field}-error`}>{errors[field]}</span>}</div>;
-  const select = (field: EnquiryField, label: string, options: string[]) => <div className={field === 'repository' ? 'field full' : 'field'}><label htmlFor={field}>{label} *</label><select id={field} value={values[field]} onChange={e => update(field,e.target.value)} aria-invalid={!!errors[field]} aria-describedby={errors[field] ? `${field}-error` : undefined} required><option value="">Select an option</option>{options.map(option => <option key={option} value={option}>{option}</option>)}</select>{errors[field] && <span className="field-error" id={`${field}-error`}>{errors[field]}</span>}</div>;
-  return <form className="contact-form" onSubmit={e => { e.preventDefault(); openEmail(); }} noValidate><div className="form-grid">{input('name','Your name',true)}{input('email','Email address',true,'email')}{input('company','Company (optional)')}{select('language','Existing language',['Python','JavaScript / Node.js','Java','C / C++','Mixed stack','Other'])}{select('applicationType','Application type',['Backend service','CLI or developer tool','Library or SDK','Data pipeline','Application component','Other'])}{select('codebaseSize','Approximate codebase size',['Under 10k lines','10k–50k lines','50k–250k lines','Over 250k lines','Unsure'])}{select('reason','Main reason for migration',['Safety and reliability','Deployment simplicity','Performance investigation','Maintainability','Modernization','Other'])}<div className="field full"><label htmlFor="description">Tell us about your project *</label><textarea id="description" value={values.description} onChange={e => update('description',e.target.value)} maxLength={limits.description} aria-invalid={!!errors.description} aria-describedby={errors.description ? 'description-error' : undefined} required placeholder="What does the software do? What must stay compatible? What would success look like?"/>{errors.description && <span className="field-error" id="description-error">{errors.description}</span>}</div>{input('repository','Repository URL (optional)',false,'url')}<div className="honeypot" aria-hidden="true"><label htmlFor="website">Leave this field empty</label><input id="website" tabIndex={-1} autoComplete="off" value={values.website} onChange={e => update('website',e.target.value)}/></div></div><p className="form-note">Your details stay in your browser until you choose to send an email. No enquiry is stored by this site.</p><div className="form-actions"><button type="submit" className="button button-primary">Open email draft <ArrowUpRight size={17}/></button><button type="button" className="button button-secondary" onClick={copy}>{copied ? <Check size={16}/> : <Copy size={16}/>} {copied ? 'Copied' : 'Copy enquiry'}</button></div><p className="form-feedback" role="status" aria-live="polite">{feedback}</p></form>;
+  function update(field: EnquiryField, value: string) {
+    setValues((current) => ({ ...current, [field]: value }));
+    setErrors((current) => ({ ...current, [field]: undefined }));
+    setFeedback("");
+  }
+  function check() {
+    const next = validateEnquiry(values);
+    setErrors(next);
+    if (Object.keys(next).length) {
+      setFeedback("Please correct the highlighted fields.");
+      return false;
+    }
+    return true;
+  }
+  function openEmail() {
+    if (!check()) return;
+    const subject = encodeURIComponent(
+      `Migration enquiry from ${values.name.trim()}`,
+    );
+    const body = encodeURIComponent(formatEnquiry(values));
+    window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+    setFeedback(
+      "Your email application should open with a draft. Review and send it there to complete the enquiry.",
+    );
+  }
+  async function copy() {
+    if (!check()) return;
+    try {
+      await navigator.clipboard.writeText(formatEnquiry(values));
+      setCopied(true);
+      setFeedback(
+        "Enquiry copied. Paste it into an email and send it to " +
+          recipient +
+          ".",
+      );
+    } catch {
+      setFeedback(
+        "Copy was unavailable in this browser. You can use the email draft instead.",
+      );
+    }
+  }
+  const input = (
+    field: EnquiryField,
+    label: string,
+    required = false,
+    type = "text",
+  ) => (
+    <div className={field === "repository" ? "field full" : "field"}>
+      <label htmlFor={field}>
+        {label}
+        {required ? " *" : ""}
+      </label>
+      <input
+        id={field}
+        type={type}
+        value={values[field]}
+        onChange={(e) => update(field, e.target.value)}
+        maxLength={limits[field]}
+        aria-invalid={!!errors[field]}
+        aria-describedby={errors[field] ? `${field}-error` : undefined}
+        required={required}
+      />
+      {errors[field] && (
+        <span className="field-error" id={`${field}-error`}>
+          {errors[field]}
+        </span>
+      )}
+    </div>
+  );
+  const select = (field: EnquiryField, label: string, options: string[]) => (
+    <div className={field === "repository" ? "field full" : "field"}>
+      <label htmlFor={field}>{label} *</label>
+      <select
+        id={field}
+        value={values[field]}
+        onChange={(e) => update(field, e.target.value)}
+        aria-invalid={!!errors[field]}
+        aria-describedby={errors[field] ? `${field}-error` : undefined}
+        required
+      >
+        <option value="">Select an option</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      {errors[field] && (
+        <span className="field-error" id={`${field}-error`}>
+          {errors[field]}
+        </span>
+      )}
+    </div>
+  );
+  return (
+    <form
+      className="contact-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        openEmail();
+      }}
+      noValidate
+    >
+      <div className="form-grid">
+        {input("name", "Your name", true)}
+        {input("email", "Email address", true, "email")}
+        {input("company", "Company (optional)")}
+        {select("language", "Existing language", [
+          "Python",
+          "JavaScript / Node.js",
+          "Java",
+          "C / C++",
+          "Mixed stack",
+          "Other",
+        ])}
+        {select("applicationType", "Application type", [
+          "Backend service",
+          "CLI or developer tool",
+          "Library or SDK",
+          "Data pipeline",
+          "Application component",
+          "Other",
+        ])}
+        {select("codebaseSize", "Approximate codebase size", [
+          "Under 10k lines",
+          "10k–50k lines",
+          "50k–250k lines",
+          "Over 250k lines",
+          "Unsure",
+        ])}
+        {select("reason", "Main reason for migration", [
+          "Safety and reliability",
+          "Deployment simplicity",
+          "Performance investigation",
+          "Maintainability",
+          "Modernization",
+          "Other",
+        ])}
+        <div className="field full">
+          <label htmlFor="description">Tell us about your project *</label>
+          <textarea
+            id="description"
+            value={values.description}
+            onChange={(e) => update("description", e.target.value)}
+            maxLength={limits.description}
+            aria-invalid={!!errors.description}
+            aria-describedby={
+              errors.description ? "description-error" : undefined
+            }
+            required
+            placeholder="What does the software do? What must stay compatible? What would success look like?"
+          />
+          {errors.description && (
+            <span className="field-error" id="description-error">
+              {errors.description}
+            </span>
+          )}
+        </div>
+        {input("repository", "Repository URL (optional)", false, "url")}
+        <div className="honeypot" aria-hidden="true">
+          <label htmlFor="website">Leave this field empty</label>
+          <input
+            id="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={values.website}
+            onChange={(e) => update("website", e.target.value)}
+          />
+        </div>
+      </div>
+      <p className="form-note">
+        Your details stay in your browser until you choose to send an email. No
+        enquiry is stored by this site.
+      </p>
+      <div className="form-actions">
+        <button type="submit" className="button button-primary">
+          Open email draft <ArrowUpRight size={17} />
+        </button>
+        <button
+          type="button"
+          className="button button-secondary"
+          onClick={copy}
+        >
+          {copied ? <Check size={16} /> : <Copy size={16} />}{" "}
+          {copied ? "Copied" : "Copy enquiry"}
+        </button>
+      </div>
+      <p className="form-feedback" role="status" aria-live="polite">
+        {feedback}
+      </p>
+    </form>
+  );
 }

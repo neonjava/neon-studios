@@ -1,5 +1,6 @@
-export type SourceLanguage = 'Python' | 'Node.js' | 'Java';
-export type Workload = 'Data transformation' | 'File processing' | 'CLI utility' | 'Background task';
+export type SourceLanguage = "Python" | "Node.js" | "Java";
+export type Workload =
+  "Data transformation" | "File processing" | "CLI utility" | "Background task";
 export interface MigrationExample {
   id: string;
   language: SourceLanguage;
@@ -53,7 +54,10 @@ fn main() {
     }
 }`,
 };
-const source: Record<SourceLanguage, Record<'data'|'file'|'cli'|'task', string>> = {
+const source: Record<
+  SourceLanguage,
+  Record<"data" | "file" | "cli" | "task", string>
+> = {
   Python: {
     data: `import sys
 names = sorted({line.strip().lower() for line in sys.stdin if line.strip()})
@@ -72,7 +76,7 @@ for line in sys.stdin:
     outcome = f"ok:{failures + 1}" if failures < 3 else "failed:3"
     print(f"{task_id.strip()}:{outcome}")`,
   },
-  'Node.js': {
+  "Node.js": {
     data: `const chunks = [];
 for await (const chunk of process.stdin) chunks.push(chunk);
 const names = [...new Set(Buffer.concat(chunks).toString('utf8')
@@ -142,21 +146,96 @@ public class Main {
   },
 };
 const workloads = [
-  { key: 'data', label: 'Data transformation', title: 'Normalize a name list', behavior: 'Read UTF-8 lines from stdin, trim ASCII whitespace, lowercase ASCII letters, remove empty and duplicate names, sort ascending, and print one name per line.', tests: [{ input: ' Ada\nBOB\nada\n', expected: 'ada\nbob\n' }, { input: '\n', expected: '\n' }], considerations: ['Define case folding and sort order before replacing production text handling.', 'Compare output fixtures across both implementations.'], limitations: 'The example contract is limited to ASCII names and whitespace.' },
-  { key: 'file', label: 'File processing', title: 'Count error lines', behavior: 'Read a UTF-8 file path from the first argument and print the count of lines containing the case-sensitive text ERROR.', tests: [{ input: 'INFO ready\nERROR failed\nERROR retry\n', expected: '2\n' }, { input: '', expected: '0\n' }], considerations: ['File encodings and read errors need an explicit production policy.', 'Test CRLF, missing files, and large files against the original.'], limitations: 'Reads the full file in Node.js and Rust; this compact example is unsuitable for very large files.' },
-  { key: 'cli', label: 'CLI utility', title: 'Sum integer arguments', behavior: 'Parse signed decimal command-line arguments, sum them, and print the total.', tests: [{ input: '4 -2 9', expected: '11\n' }, { input: '', expected: '0\n' }], considerations: ['Specify numeric range, overflow, and invalid-input exit behavior.', 'CLI flags and shell integration need separate compatibility tests.'], limitations: 'Examples assume the total fits in signed 64-bit range; invalid-input error text differs.' },
-  { key: 'task', label: 'Background task', title: 'Model a bounded retry', behavior: 'Read id,failures rows from stdin and report the attempt of success, or failed:3 after three attempts.', tests: [{ input: 'alpha,0\nbeta,2\ngamma,3\n', expected: 'alpha:ok:1\nbeta:ok:3\ngamma:failed:3\n' }], considerations: ['Real retries need idempotency, deadlines, backoff, and durable state.', 'Verify failure ordering and duplicate delivery with an actual queue.'], limitations: 'This deterministic model performs no network call, queue operation, delay, or concurrent work.' },
+  {
+    key: "data",
+    label: "Data transformation",
+    title: "Normalize a name list",
+    behavior:
+      "Read UTF-8 lines from stdin, trim ASCII whitespace, lowercase ASCII letters, remove empty and duplicate names, sort ascending, and print one name per line.",
+    tests: [
+      { input: " Ada\nBOB\nada\n", expected: "ada\nbob\n" },
+      { input: "\n", expected: "\n" },
+    ],
+    considerations: [
+      "Define case folding and sort order before replacing production text handling.",
+      "Compare output fixtures across both implementations.",
+    ],
+    limitations:
+      "The example contract is limited to ASCII names and whitespace.",
+  },
+  {
+    key: "file",
+    label: "File processing",
+    title: "Count error lines",
+    behavior:
+      "Read a UTF-8 file path from the first argument and print the count of lines containing the case-sensitive text ERROR.",
+    tests: [
+      { input: "INFO ready\nERROR failed\nERROR retry\n", expected: "2\n" },
+      { input: "", expected: "0\n" },
+    ],
+    considerations: [
+      "File encodings and read errors need an explicit production policy.",
+      "Test CRLF, missing files, and large files against the original.",
+    ],
+    limitations:
+      "Reads the full file in Node.js and Rust; this compact example is unsuitable for very large files.",
+  },
+  {
+    key: "cli",
+    label: "CLI utility",
+    title: "Sum integer arguments",
+    behavior:
+      "Parse signed decimal command-line arguments, sum them, and print the total.",
+    tests: [
+      { input: "4 -2 9", expected: "11\n" },
+      { input: "", expected: "0\n" },
+    ],
+    considerations: [
+      "Specify numeric range, overflow, and invalid-input exit behavior.",
+      "CLI flags and shell integration need separate compatibility tests.",
+    ],
+    limitations:
+      "Examples assume the total fits in signed 64-bit range; invalid-input error text differs.",
+  },
+  {
+    key: "task",
+    label: "Background task",
+    title: "Model a bounded retry",
+    behavior:
+      "Read id,failures rows from stdin and report the attempt of success, or failed:3 after three attempts.",
+    tests: [
+      {
+        input: "alpha,0\nbeta,2\ngamma,3\n",
+        expected: "alpha:ok:1\nbeta:ok:3\ngamma:failed:3\n",
+      },
+    ],
+    considerations: [
+      "Real retries need idempotency, deadlines, backoff, and durable state.",
+      "Verify failure ordering and duplicate delivery with an actual queue.",
+    ],
+    limitations:
+      "This deterministic model performs no network call, queue operation, delay, or concurrent work.",
+  },
 ] as const;
-export const migrationExamples: MigrationExample[] = (Object.keys(source) as SourceLanguage[]).flatMap(language => workloads.map(workload => ({
-  id: `${language.toLowerCase().replace('.', '')}-${workload.key}`,
-  language,
-  workload: workload.label,
-  title: workload.title,
-  behavior: workload.behavior,
-  sourceCode: source[language][workload.key],
-  rustCode: rust[workload.key],
-  tests: [...workload.tests],
-  considerations: [...workload.considerations],
-  limitations: workload.limitations,
-  sourceFile: language === 'Python' ? 'main.py' : language === 'Java' ? 'Main.java' : 'main.mjs',
-})));
+export const migrationExamples: MigrationExample[] = (
+  Object.keys(source) as SourceLanguage[]
+).flatMap((language) =>
+  workloads.map((workload) => ({
+    id: `${language.toLowerCase().replace(".", "")}-${workload.key}`,
+    language,
+    workload: workload.label,
+    title: workload.title,
+    behavior: workload.behavior,
+    sourceCode: source[language][workload.key],
+    rustCode: rust[workload.key],
+    tests: [...workload.tests],
+    considerations: [...workload.considerations],
+    limitations: workload.limitations,
+    sourceFile:
+      language === "Python"
+        ? "main.py"
+        : language === "Java"
+          ? "Main.java"
+          : "main.mjs",
+  })),
+);
