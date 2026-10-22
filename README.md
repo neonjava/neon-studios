@@ -54,7 +54,7 @@ This repository does not deploy or change DNS automatically.
 
 ## Refactor verification
 
-The matte redesign was checked with ESLint, strict TypeScript, the production build, seven unit/integration tests, and four Chromium browser flows. Browser coverage includes persistent light/dark preferences, navigation, mobile dock behavior, form validation, code copying, migration selection, workspace interactions, keyboard process tabs, and axe scans on all six routes in both themes. Migration fixtures are compiled/executed using Python, Node.js, Java, and Rust; these toolchains must be installed to run the full unit suite.
+The matte redesign was checked with ESLint, strict TypeScript, the production build, ten unit/integration tests, and five Chromium browser flows. Browser coverage includes persistent light/dark preferences, navigation, mobile dock behavior, form validation, code copying, migration selection, workspace interactions, keyboard process tabs, and axe scans on all six routes in both themes. Migration fixtures are compiled/executed using Python, Node.js, Java, and Rust; these toolchains must be installed to run the full unit suite.
 
 ## Cloudflare DNS for studio.neonjava.in
 
@@ -76,3 +76,20 @@ The matte redesign was checked with ESLint, strict TypeScript, the production bu
 Keep existing apex, www, email records, and Cloudflare nameservers. If a `studio` record already exists, inspect its destination before replacing it. This website promotes paid services: use a Vercel plan that permits commercial use; Hobby is restricted to personal, non-commercial usage.
 
 References: [Vercel custom domains](https://vercel.com/docs/domains/set-up-custom-domain), [Cloudflare DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/), [Vercel usage guidelines](https://vercel.com/docs/limits/fair-use-guidelines).
+
+## Search visibility and Google Search Console
+
+Titles, descriptions, canonical URLs, and social metadata are managed in `src/config/seo.ts`. The six canonical production URLs feed the sitemap. JSON-LD identifies the studio, founder, website, and the services actually described on the page. No fake ratings, locations, client results, or performance claims are added. Vercel preview builds emit `noindex` metadata.
+
+After deploying to `https://studio.neonjava.in`:
+
+1. Add the HTTPS URL-prefix property in Google Search Console.
+2. Choose HTML tag verification. Set `GOOGLE_SITE_VERIFICATION` in Vercel to the tag's **content value only**, then redeploy. Keep local configuration in ignored `.env.local`; don't commit it. The token will be public in the generated HTML, as required by Google.
+3. Confirm the live homepage contains the verification meta tag, then click **Verify**. Keep the value configured after verification.
+4. Submit `https://studio.neonjava.in/sitemap.xml` in Search Console's Sitemaps screen.
+5. Inspect the homepage and services URL using URL Inspection, test the live URL, and request indexing. Review indexing reports after Google crawls the site.
+6. Publish useful, original technical explanations and verified migration case studies as real work becomes available. Link to the studio from your own relevant profiles.
+
+Metadata and sitemaps help Google understand and discover the site; they do not guarantee indexing, rankings, or a specific search result appearance. See [Google site names](https://developers.google.com/search/docs/appearance/site-names) and [sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap).
+
+See `SECURITY.md` for public repository precautions. Never put API tokens or private client information into site content, metadata, or browser environment variables.

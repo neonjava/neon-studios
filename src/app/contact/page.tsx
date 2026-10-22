@@ -1,14 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/config/seo";
 import { ContactForm } from "@/components/ContactForm";
 import { PageIntro } from "@/components/PageIntro";
 import { WindowFrame } from "@/components/ui/WindowFrame";
 import { site } from "@/config/site";
 
-export const metadata: Metadata = {
-  title: "Start a Project",
-  description:
-    "Discuss an existing codebase or Rust migration with Neon Studios.",
-};
+export const metadata = pageMetadata("/contact");
 
 export default function ContactPage() {
   return (

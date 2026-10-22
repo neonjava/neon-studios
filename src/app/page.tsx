@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/config/seo";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -18,6 +19,8 @@ import { migrationExamples } from "@/content/migrations";
 import { highlightExamples } from "@/lib/highlight";
 
 const icons = { shield: ShieldCheck, cpu: Cpu, layers: Layers3 };
+
+export const metadata = pageMetadata("/");
 
 export default async function Home() {
   const [example] = await highlightExamples([migrationExamples[0]]);

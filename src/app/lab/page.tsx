@@ -1,14 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/config/seo";
 import { MigrationLab } from "@/components/MigrationLab";
 import { PageIntro } from "@/components/PageIntro";
 import { migrationExamples } from "@/content/migrations";
 import { highlightExamples } from "@/lib/highlight";
 
-export const metadata: Metadata = {
-  title: "Migration Lab",
-  description:
-    "Compare educational Python, Node.js, and Java examples with equivalent Rust implementations.",
-};
+export const metadata = pageMetadata("/lab");
 
 export default async function LabPage() {
   const examples = await highlightExamples(migrationExamples);

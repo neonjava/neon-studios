@@ -1,15 +1,11 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/config/seo";
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { SectionIntro } from "@/components/SectionIntro";
 import { PageIntro } from "@/components/PageIntro";
 import { CallToAction } from "@/components/CallToAction";
 import { caseStudies } from "@/content/projects";
 
-export const metadata: Metadata = {
-  title: "Engineering Work",
-  description:
-    "Verified founder projects and migration case studies from Neon Studios.",
-};
+export const metadata = pageMetadata("/work");
 
 export default function WorkPage() {
   return (

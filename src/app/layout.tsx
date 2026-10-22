@@ -1,3 +1,6 @@
+import { isPreview } from "@/config/seo";
+import { StructuredData } from "@/components/StructuredData";
+import { studioStructuredData } from "@/lib/structured-data";
 import type { Metadata, Viewport } from "next";
 import { Geist, JetBrains_Mono } from "next/font/google";
 import { Navigation } from "@/components/Navigation";
@@ -15,6 +18,8 @@ const mono = JetBrains_Mono({
   display: "swap",
 });
 export const metadata: Metadata = {
+  robots: { index: !isPreview, follow: true },
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION },
   metadataBase: new URL(site.url),
   title: { default: site.title, template: "%s | Neon Studios" },
   description: site.description,
@@ -49,6 +54,7 @@ export default function RootLayout({
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <StructuredData data={studioStructuredData} />
         <Navigation />
         <main id="main">{children}</main>
         <Footer />

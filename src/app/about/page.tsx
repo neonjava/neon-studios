@@ -1,15 +1,11 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/config/seo";
 import { ArrowUpRight } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";
 import { CallToAction } from "@/components/CallToAction";
 import { principles } from "@/content/studio";
 import { site } from "@/config/site";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "Neon Studios is an independent Rust-first engineering studio founded by NeonJava.",
-};
+export const metadata = pageMetadata("/about");
 
 export default function AboutPage() {
   return (

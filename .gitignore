@@ -7,3 +7,11 @@ out
 coverage
 playwright-report
 test-results
+
+# Local deployment credentials and private key material
+.vercel/
+.dev.vars*
+*.pem
+*.key
+*.p12
+*.pfx

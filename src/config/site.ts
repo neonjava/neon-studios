@@ -1,8 +1,8 @@
 export const site = {
   name: "Neon Studios",
-  title: "Neon Studios — Software, reimagined in Rust",
+  title: "Neon Studios — Rust Migration & Software Modernization",
   description:
-    "Founder-operated Rust migration and modernization. We preserve behavior, verify compatibility, and measure what changes.",
+    "Neon Studios is a founder-operated Rust migration and software modernization studio. We preserve behavior, verify compatibility, and measure performance.",
   url: "https://studio.neonjava.in",
   founder: "NeonJava",
   github: "https://github.com/neonjava",

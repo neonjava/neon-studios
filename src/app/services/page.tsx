@@ -1,19 +1,18 @@
-import type { Metadata } from "next";
+import { StructuredData } from "@/components/StructuredData";
+import { serviceStructuredData } from "@/lib/structured-data";
+import { pageMetadata } from "@/config/seo";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { services } from "@/content/services";
 import { PageIntro } from "@/components/PageIntro";
 import { CallToAction } from "@/components/CallToAction";
 
-export const metadata: Metadata = {
-  title: "Migration Services",
-  description:
-    "Python, Node.js, Java, and C/C++ migrations to Rust, plus Rust SDK development.",
-};
+export const metadata = pageMetadata("/services");
 
 export default function ServicesPage() {
   return (
     <>
+      <StructuredData data={serviceStructuredData} />
       <PageIntro
         label="Migration services"
         title="Built around the code you already have."

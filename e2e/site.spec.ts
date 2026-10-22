@@ -137,3 +137,44 @@ test("workspace and process respond to pointer and keyboard", async ({
   await page.keyboard.press("End");
   await expect(page.getByRole("tabpanel")).toContainText("Deliver.");
 });
+
+test("search metadata and structured data identify each canonical page", async ({
+  page,
+  request,
+}) => {
+  for (const route of [
+    "/",
+    "/services",
+    "/work",
+    "/lab",
+    "/about",
+    "/contact",
+  ]) {
+    await page.goto(route);
+    const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
+    const socialUrl = await page.locator('meta[property="og:url"]').getAttribute("content");
+    expect(new URL(canonical!).href).toBe(`https://studio.neonjava.in${route}`);
+    expect(new URL(socialUrl!).href).toBe(`https://studio.neonjava.in${route}`);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      "content",
+      /Rust|NeonJava/,
+    );
+    await expect(page).toHaveTitle(/Neon Studios/);
+    const graphs = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    expect(graphs.map((value) => JSON.parse(value))[0]["@graph"]).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ "@type": "WebSite", name: "Neon Studios" }),
+      ]),
+    );
+  }
+  const sitemap = await request.get("/sitemap.xml");
+  expect(sitemap.ok()).toBe(true);
+  expect((await sitemap.text()).match(/<loc>/g)).toHaveLength(6);
+  const robots = await request.get("/robots.txt");
+  expect(await robots.text()).toContain(
+    "Sitemap: https://studio.neonjava.in/sitemap.xml",
+  );
+  expect((await request.get("/a-page-that-does-not-exist")).status()).toBe(404);
+});
